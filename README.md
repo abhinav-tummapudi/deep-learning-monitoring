@@ -241,7 +241,7 @@ Go to the "Datasource" section under "Connections" and select Prometheus from th
 
 ![image](./images/grafana.png) 
 
-**Note:** I've disabled a few sections in the screenshot for security reasons. However, you should be able to view all the data.
+**Note:** I've disabled (No data field) a few sections in the screenshot for security reasons. However, you should be able to view all the data.
 
 ## $${\color{blue}Conclusion}$$
 
