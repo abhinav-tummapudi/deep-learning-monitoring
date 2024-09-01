@@ -77,7 +77,23 @@ With the server now up and running, it's time to move on to the essential instal
 
 ## $${\color{blue}Network}$$ $${\color{blue}Setup}$$ 
 
+Even though there isn't a firewall active on your VM, incoming traffic is still restricted within the VM. To address this, let's set up firewall rules in Google Cloud Platform (GCP) under VPC Networks.
+
+Please refer to the image below and replicate the configuration.
+
+![image](./images/firewall.png)
+
+We had enabled the specific ports because we will be installing the exporters and exposing them to these ports only.
+
+- Node Exporter - 9100
+- DCGM Exporter - 9400
+- Grafana       - 3000
+- Prometheus    - 9090
+- Nvidia SMI    - 9843
+ 
 ## $${\color{blue}Tools}$$ $${\color{blue}Configurations}$$ 
+
+** NOTE: In the above screenshot I had forgot to add 9843 port in the TCP list. Please add 9843 as well.
 
 First, let’s get Docker installed, as it will be the foundation for running all the tools on this VM. You can follow the installation instructions provided in the link below to set up Docker:
 
@@ -129,6 +145,26 @@ docker run -d --name node-exporter -p 9100:9100 prom/node-exporter
 
 ```
 
+This command will start DCGM Exporter and expose it on port 9843.
+
+Next, let's install the Nvidia SMI exporter. 
+
+nvidia_smi_exporter is a Prometheus exporter specifically designed to expose NVIDIA GPU metrics. It uses the nvidia-smi tool to gather information about NVIDIA GPUs and makes these metrics available to Prometheus for monitoring and alerting.
+
+```sh
+$ docker run -d \
+--name nvidia_smi_exporter \
+--restart unless-stopped \
+--device /dev/nvidiactl:/dev/nvidiactl \
+--device /dev/nvidia0:/dev/nvidia0 \
+-v /usr/lib/x86_64-linux-gnu/libnvidia-ml.so:/usr/lib/x86_64-linux-gnu/libnvidia-ml.so \
+-v /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1:/usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1 \
+-v /usr/bin/nvidia-smi:/usr/bin/nvidia-smi \
+-p 9843:9843 \
+utkuozdemir/nvidia_gpu_exporter:1.1.0
+
+```
+
 This command will start Node Exporter and expose it on port 9100.
 
 Finally, let’s install Grafana to visualize the metrics collected by all the exporters. Grafana is a powerful open-source platform for monitoring and observability that integrates seamlessly with Prometheus to create interactive and informative dashboards.
@@ -152,9 +188,51 @@ docker ps
 ![image](./images/docker.png)
 
 ## Exporter Integration to Prometheus
-![image](./images/prometheus_config.png)
+
+Now that we have installed all the necessary exporters to collect metrics, let's integrate everything under Prometheus.
+
+Since Prometheus is running as a Docker container, let's enter the Docker container and adjust the Prometheus configuration file.
+
+The below command gets you into the container.
+
+```sh
+docker exec -it prometheus /bin/sh
+
+```
+Now navigate to 
+
+```sh
+vi /etc/prometheus/prometheus.yml
+
+```
+Please add the below lines to your config file.
+
+```sh
+scrape_configs:
+  - job_name: 'nvidia_smi_exporter'
+    static_configs:
+      - targets: ['<internal_ip>:9835]
+  
+  - job_name: 'dcgm_exporter'
+    static_configs:
+      - targets: ['<internal_ip>:9400]
+
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets: ['<internal_ip>:9100]
+
+```
+Please save and code the file.
+
+Let's restart Prometheus to apply the changes and allow it to pick up the new metrics.
+
+After restarting Prometheus, open a web browser and navigate to `http://<server_ip>:9090`. Then, go to the "Targets" section to check if all the exporters are up and running.
+
 ![image](./images/prometheus_targets.png)
+
 ## Integrating the Prometheus to Grafana
+
+Finally
 
 ![image](./images/grafana_config.png)
 ![image](./images/grafana.png) 
