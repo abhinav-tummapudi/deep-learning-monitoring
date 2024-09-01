@@ -1,6 +1,6 @@
 # $${\color{red}Deep}$$ $${\color{red}Learning}$$ $${\color{red}Monitoring}$$
  
-## Introduction
+## $${\color{blue}Introduction}$$
 
 This project is designed to provide comprehensive visualization of server utilization during deep learning model training. By leveraging this tool, users can gain real-time insights into the performance and resource usage of their virtual machines, including detailed GPU metrics. This system is highly versatile and can be deployed across a range of environments, including personal computers, dedicated servers, and large-scale datacenters.
 
@@ -40,7 +40,7 @@ This monitoring tool is ideal for:
 
 By implementing this monitoring system, users can achieve greater transparency and control over their computational resources, ultimately leading to more efficient deep learning model training and better resource management.
 
-## Setting Up
+## $${\color{blue}Setting}$$ $${\color{blue}Up}$$
 
 ### Prerequisites & Tech-stacks
 
