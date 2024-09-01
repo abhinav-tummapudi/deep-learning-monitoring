@@ -1,4 +1,4 @@
-# $${\color{red}Red}$$ Deep Learning Monitoring
+# $${\color{red}Deep Learning Monitoring}$$
  
 ## Introduction
 
