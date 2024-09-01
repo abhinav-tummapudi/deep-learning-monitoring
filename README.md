@@ -44,23 +44,32 @@ By implementing this monitoring system, users can achieve greater transparency a
 
 ### Prerequisites & Tech-stacks
 
-- MySQL server/database
-- Slurm
+- Google Cloud Platform
+- Debian Linux
+- CUDA - 12.1
 - Python
-    - Tensorflow & Pytorch
-    - Scikit-learn
-    - WordCloud
-    - Transformers
-    - Fuzzywuzzy
-    - Collections
-    - Pandas
-    - Matplotlib
-    - Seaborn
-    - Jupyter Notebook
+- Tensorflow
+- PyTorch
+- Docker
+- Prometheus
+- Grafana
+- Node Exporter
+- DCGM Exporter
+- Nvidia SMI Exporter
+
 
 All the above mentioned packages will be availabe under [prerequisites](#prerequisites--tech-stacks).
 
 ### Environment Setup
+
+I am assuming you already have a GCP account, if you want to follow my approach. Firstly I will be creating a virtual machine with 4 core, 16 GB memory with debian based deep learning image. The image will automatically install PyTorch - 2.3, CUDA - 12.1, Fast AI, Python - 3.10.
+I will be selecting a 150 Gigs of storage. I will be enabling the HTTP and HTTPS networks for the firewall rules.
+
+For this project I am selecting one L4 GPU. You are free to selecting any number of GPUs of differnt kinds (A100s, H100s, etc). 
+
+![image](./images/vm_spin.png)
+![image](./images/vm_create.png)
+
 
 Inorder to run the project on your local environment, the prerequisites needs to be met for a seamless running. The setup followed the steps below:
 
