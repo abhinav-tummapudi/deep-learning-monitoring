@@ -211,15 +211,15 @@ Please add the below lines to your config file.
 scrape_configs:
   - job_name: 'nvidia_smi_exporter'
     static_configs:
-      - targets: ['<internal_ip>:9835]
+      - targets: ['<internal_ip>:9835']
   
   - job_name: 'dcgm_exporter'
     static_configs:
-      - targets: ['<internal_ip>:9400]
+      - targets: ['<internal_ip>:9400']
 
   - job_name: 'node_exporter'
     static_configs:
-      - targets: ['<internal_ip>:9100]
+      - targets: ['<internal_ip>:9100']
 
 ```
 Please save and code the file.
