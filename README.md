@@ -75,9 +75,9 @@ You could refer to this blog for setting up [passwordless ssh](https://www.redha
 
 With the server now up and running, it's time to move on to the essential installations. Let's get started on setting up the core components to power your project.
 
-## Network Setup
+## $${\color{blue}Network}$$ $${\color{blue}Setup}$$ 
 
-## Tools Configurations
+## $${\color{blue}Tools}$$ $${\color{blue}Configurations}$$ 
 
 First, let’s get Docker installed, as it will be the foundation for running all the tools on this VM. You can follow the installation instructions provided in the link below to set up Docker:
 
@@ -159,7 +159,8 @@ docker ps
 ![image](./images/grafana_config.png)
 ![image](./images/grafana.png) 
 
-## Conclusion
+
+## $${\color{blue}Conclusion}$$
 
 With this tool, you can effortlessly visualize your model's resource usage, helping you decide whether to scale up or down your VM configuration. Plus, it's a lot of fun to experiment with! I used it to discover that TensorFlow performs significantly faster than PyTorch in my image classification tests. I noticed that TensorFlow utilizes 98% of my L4 GPU during training, whereas PyTorch only taps into 6%. Fascinating, right? I’m diving into this discrepancy to uncover more.
 
