@@ -89,11 +89,11 @@ We had enabled the specific ports because we will be installing the exporters an
 - DCGM Exporter - 9400
 - Grafana       - 3000
 - Prometheus    - 9090
-- Nvidia SMI    - 9843
+- Nvidia SMI    - 9835
  
 ## $${\color{blue}Tools}$$ $${\color{blue}Configurations}$$ 
 
-** NOTE: In the above screenshot I had forgot to add 9843 port in the TCP list. Please add 9843 as well.
+** NOTE: In the above screenshot I had forgot to add 9835 port in the TCP list. Please add 9835 as well.
 
 First, let’s get Docker installed, as it will be the foundation for running all the tools on this VM. You can follow the installation instructions provided in the link below to set up Docker:
 
@@ -115,7 +115,7 @@ Prometheus is widely used in cloud-native and microservices architectures due to
 You can install it by follow the below command
 
 ```sh
-docker run -d --name prometheus -p 9090:9090 prom/prometheus
+docker run -d --name prometheus -p 9090:9090 --restart unless-stopped prom/prometheus
 
 ```
 
@@ -128,7 +128,7 @@ The NVIDIA Data Center GPU Manager (DCGM) is a suite of tools and services desig
 You can install it by follow the below command
 
 ```sh
-docker run --gpus all -d --name dcgm-exporter -p 9400:9400 nvidia/dcgm-exporter
+docker run --gpus all -d --name dcgm-exporter -p 9400:9400 --restart unless-stopped nvidia/dcgm-exporter
 
 ```
 
@@ -141,11 +141,11 @@ Node Exporter is a tool developed by Prometheus to collect and expose system met
 You can install it by follow the below command
 
 ```sh
-docker run -d --name node-exporter -p 9100:9100 prom/node-exporter
+docker run -d --name node-exporter -p 9100:9100 --restart unless-stopped prom/node-exporter
 
 ```
 
-This command will start DCGM Exporter and expose it on port 9843.
+This command will start DCGM Exporter and expose it on port 9835.
 
 Next, let's install the Nvidia SMI exporter. 
 
@@ -160,7 +160,7 @@ $ docker run -d \
 -v /usr/lib/x86_64-linux-gnu/libnvidia-ml.so:/usr/lib/x86_64-linux-gnu/libnvidia-ml.so \
 -v /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1:/usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1 \
 -v /usr/bin/nvidia-smi:/usr/bin/nvidia-smi \
--p 9843:9843 \
+-p 9835:9835 \
 utkuozdemir/nvidia_gpu_exporter:1.1.0
 
 ```
@@ -172,7 +172,7 @@ Finally, let’s install Grafana to visualize the metrics collected by all the e
 You can install it by follow the below command
 
 ```sh
-docker run -d --name grafana -p 3000:3000 grafana/grafana-enterprise
+docker run -d --name grafana -p 3000:3000 --restart unless-stopped grafana/grafana-enterprise
 
 ```
 
@@ -226,17 +226,22 @@ Please save and code the file.
 
 Let's restart Prometheus to apply the changes and allow it to pick up the new metrics.
 
-After restarting Prometheus, open a web browser and navigate to `http://<server_ip>:9090`. Then, go to the "Targets" section to check if all the exporters are up and running.
-
-![image](./images/prometheus_targets.png)
+After restarting Prometheus, open a web browser and navigate to `http://<server_ip>:9090`. Then, go to the "Targets" section under Status tab to check if all the exporters are up and running.
 
 ## Integrating the Prometheus to Grafana
 
-Finally
+Finally, set up Grafana by opening a web browser and navigating to `http://<server_ip>:3000`. Use the default credentials:
 
-![image](./images/grafana_config.png)
+- Username: admin
+- Password: admin
+
+Go to the "Datasource" section under "Connections" and select Prometheus from the list. In the "Prometheus Server URL" field, enter your Prometheus IP as `http://<prometheus_server_IP:9090>`, then click "Save & Test."
+
+**Note:** If `localhost:9090` doesn't work, try using the internal IP instead of `localhost`.
+
 ![image](./images/grafana.png) 
 
+**Note:** I've disabled a few sections in the screenshot for security reasons. However, you should be able to view all the data.
 
 ## $${\color{blue}Conclusion}$$
 
